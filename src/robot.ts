@@ -1,9 +1,11 @@
+// ロボットのタイプ（プレイヤー、敵、スクラップ）
 export enum RobotType {
     Player,
     Enemy,
     Scrap
 }
 
+// ロボットが動く方向
 export enum RobotMove {
     Teleport,
     Wait,
@@ -18,17 +20,26 @@ export enum RobotMove {
     Unknown
 }
 
+// 1体のロボットに関する情報 (座標とロボとのタイプ)
 export type RobotInfo = {
     x: number,
     y: number,
     type: RobotType
 }
 
+// ロボットの操作に必要な関数をinterfaceで予め定義
 export interface RobotRules {
     makeRobots(width: number, height: number, level: number): void;
     canPutRobot(x: number, y: number): boolean;
+    canMove(x: number, y: number, width: number, height: number): boolean;
+    movePlayer(toward: RobotMove, width: number, height: number): boolean;
+    moveEnemey(): boolean;
+    wipeOut(): boolean;
+    countDeadEnemy(): number;
+    countTotalDeadEnemy(level: number): number;
 }
 
+// ロボットの管理
 export class Robot implements RobotRules {
     robotList: RobotInfo[];
 
@@ -36,6 +47,7 @@ export class Robot implements RobotRules {
         this.robotList = [];
     }
 
+    // ロボットの初期配置（プレイヤー、敵同時に行う）
     makeRobots(width: number, height: number, level: number): void {
         this.robotList = [];
 
@@ -59,6 +71,7 @@ export class Robot implements RobotRules {
         }
     }
 
+    // ロボットの配置ができるかチェック
     canPutRobot(x: number, y: number): boolean {
         // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < this.robotList.length; i++) {
@@ -70,6 +83,7 @@ export class Robot implements RobotRules {
         return true;
     }
 
+    // プレイヤーロボットが正しく動けるかチェック
     canMove(x: number, y: number, width: number, height: number): boolean {
         // フィールド外に出ないかチェック
         if (x === 0 || y === 0 || x === width + 1 || y === height + 1)
@@ -85,6 +99,7 @@ export class Robot implements RobotRules {
         return true;
     }
 
+    // プレイヤーロボットの移動
     movePlayer(toward: RobotMove, width: number, height: number): boolean {
         let x = this.robotList[0].x;
         let y = this.robotList[0].y;
@@ -138,6 +153,7 @@ export class Robot implements RobotRules {
         return true;
     }
 
+    // プレイヤーを動かした後に敵を一マス動かす
     moveEnemey(): boolean {
         for (const item of this.robotList) {
             if (item.type === RobotType.Player || item.type === RobotType.Scrap) {
@@ -188,6 +204,7 @@ export class Robot implements RobotRules {
         return true;
     }
 
+    // 全滅チェック
     wipeOut(): boolean {
         for (let i = 1; i < this.robotList.length; i++) {
             if (this.robotList[i].type === RobotType.Enemy) {
@@ -197,6 +214,7 @@ export class Robot implements RobotRules {
         return true;
     }
 
+    // 倒した敵の数
     countDeadEnemy(): number {
         const length = this.robotList.length;
         let count = 0;
@@ -208,7 +226,8 @@ export class Robot implements RobotRules {
         return count;
     }
 
-    countTotalDeadEnemy(level: number) {
+    // 累計で倒した敵の数
+    countTotalDeadEnemy(level: number): number {
         let total = 0;
         for (let l = level - 1; l > 0; l--) {
             total += l * 10;

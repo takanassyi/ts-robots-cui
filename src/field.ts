@@ -1,20 +1,24 @@
-import { Robot, RobotInfo, RobotType } from "./robot"
+import { RobotInfo, RobotType } from "./robot"
 
+// フィールドサイズをreadonlyで宣言
 export interface FieldSize {
     readonly width: number,
     readonly height: number,
 }
 
+// フィールド表示に必要な関数
 export interface FieldMethod {
     printField(): void;
     printGuide(level: number, score: number): void;
     printRobots(robotList: RobotInfo[]): void;
 }
 
+// 上記インタフェースを実装したFieldクラス
 export class FieldCUI implements FieldSize, FieldMethod {
     readonly width = 60;
     readonly height = 20;
 
+    // tslint:disable-next-line: no-empty
     constructor() {
     }
 
