@@ -17,3 +17,7 @@
 
 ## License
 MIT
+
+## 1.0 (October 31, 2020)
+
+- Release 1.0
