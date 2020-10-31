@@ -1,7 +1,12 @@
 import { FieldCUI } from './field';
 import { Robot, RobotMove } from './robot'
 
-export class Game {
+// レベルとスコアの型宣言
+interface RobotsGame {
+    level: number,
+    score: number
+}
+export class Game implements RobotsGame {
     level: number;
     score: number;
 
@@ -11,8 +16,11 @@ export class Game {
     }
     // Robots Start
     start(): void {
+        // ロボットデータ作成
         const robot = new Robot();
+        // フィールドデータ作成
         const fieldCUI = new FieldCUI();
+        // 初期画面表示
         robot.makeRobots(fieldCUI.width, fieldCUI.height, this.level);
         fieldCUI.printField();
         fieldCUI.printRobots(robot.robotList);
@@ -63,13 +71,14 @@ export class Game {
                     toward = RobotMove.Teleport;
                     break;
                 case 'q':
+                    // ゲーム終了
                     toward = RobotMove.Unknown;
                     process.stdin.pause();
                     break;
                 default:
                     toward = RobotMove.Wait;
             }
-
+            // プレイヤーロボットが動いたとき
             if (robot.movePlayer(toward, fieldCUI.width, fieldCUI.height)) {
                 // ゲームオーバーのとき
                 if (!robot.moveEnemey()) {
@@ -85,8 +94,7 @@ export class Game {
                     for (let level = this.level - 1; level > 0; level--) {
                         bonusSum += level * 100;
                     }
-                    this.score = robot.countTotalDeadEnemy(this.level) * 10
-                        + bonusSum;
+                    this.score = robot.countTotalDeadEnemy(this.level) * 10 + bonusSum;
                     // 画面表示
                     fieldCUI.printField();
                     fieldCUI.printRobots(robot.robotList);
