@@ -1,5 +1,5 @@
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
-![version](https://img.shields.io/badge/version-1.0-blue)
+[![version](https://img.shields.io/badge/version-1.0-blue)](https://github.com/takanassyi/ts-robots-cui/releases/tag/1.0)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.txt)
 
 # ts-robots-cui
 
